@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     ID_COLUMN: str = Field(..., env="ID_COLUMN")
     DOCUMENT_COL: str = Field(..., env="DOCUMENT_COL")
     ADDITIONAL_COL: str = Field(..., env="ADDITIONAL_COL")
+    GROQ_API_KEY: str = Field(..., env="GROQ_API_KEY")
     
     model_config = SettingsConfigDict(
         env_file=".env",
