@@ -1,22 +1,22 @@
-from groq import Groq
 from app.config import settings
 from app.constants.prompts import get_summarize_reviews_prompt, system_summarize_prompt
+from google import genai
+from google.genai import types
 
 def critique_reviews(text, keyword: str):
-    client = Groq(
-        api_key=settings.GROQ_API_KEY,
+    client = genai.Client(
+        api_key=settings.GEMINI_API_KEY,
     )
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": system_summarize_prompt
-            },
-            {
-                "role": "user",
-                "content": get_summarize_reviews_prompt(keyword, text),
-            }
-        ],
-        model="llama-3.3-70b-versatile",
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=[
+            types.Content(
+                parts=[
+                    {"text": system_summarize_prompt},
+                    {"text": get_summarize_reviews_prompt(keyword, text)}
+                ],
+                role="user"
+            )
+        ]
     )
-    return chat_completion.choices[0].message.content
+    return response.text
