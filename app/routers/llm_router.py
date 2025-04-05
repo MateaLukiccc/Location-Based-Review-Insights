@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.utils.llm_utils import critique_reviews
+from app.utils.llm_utils import critique_reviews, generate_positive_summary, generate_negative_summary
 import chromadb
 from app.utils.chromadb_utils import get_entries_by_distance, get_entries_high, get_entries_low
 from app.dependencies import get_db_collection
@@ -18,10 +18,10 @@ def get_summary(keyword: str, distance_bound: float=1.1, collection: chromadb.Co
 
 @router.get("/good_summary")
 def get_good_summary(collection: chromadb.Collection = Depends(get_db_collection)):
-    # TODO: add summarizer
-    return get_entries_high(collection).get("documents", [])
+    reviews = get_entries_high(collection).get("documents", [])
+    return generate_positive_summary("\n".join(reviews))
 
 @router.get("/bad_summary")
 def get_bad_summary(collection: chromadb.Collection = Depends(get_db_collection)):
-    # TODO: add summarizer
-    return get_entries_low(collection).get("documents", [])
+    reviews = get_entries_low(collection).get("documents", [])
+    return generate_negative_summary("\n".join(reviews))
