@@ -58,3 +58,9 @@ def get_entries_low(collection):
 
 def get_entries_high(collection):
     return collection.get(where={"review_rating": {"$gte": 4}})
+
+def get_all_entries(collection):
+    results = collection.get(include=["documents"])
+    if results and results["documents"]:
+        return results["documents"]
+    return []

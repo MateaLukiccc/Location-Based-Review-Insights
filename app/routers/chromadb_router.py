@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.utils.chromadb_utils import get_entries_by_distance, get_entries
+from app.utils.chromadb_utils import get_entries_by_distance, get_entries, get_all_entries
 from app.config import settings
 import chromadb
 from app.dependencies import get_db_collection
@@ -34,3 +34,10 @@ async def get_entry_count(collection: chromadb.Collection = Depends(get_db_colle
         return {"count": count}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+async def fetch_all_reviews(collection: chromadb.Collection = Depends(get_db_collection)):
+    try:
+        results = get_all_entries(collection)
+        return results
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching reviews from ChromaDB: {e}")
