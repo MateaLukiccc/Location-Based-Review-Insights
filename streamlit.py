@@ -44,7 +44,7 @@ if selected_route == "Topic Analysis":
     st.header("Topic Analysis (/topics)")
     if st.button("Analyze Reviews"):
         with st.spinner("Analyzing reviews..."):
-            results = fetch_data("/topics/analyze", method="POST")
+            results = fetch_data("/topics/analyze", method="GET")
             if results:
                 st.subheader("Topic Analysis Results")
                 for topic in results:
