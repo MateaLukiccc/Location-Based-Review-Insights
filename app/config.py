@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     DOCUMENT_COL: str = Field(..., env="DOCUMENT_COL")
     ADDITIONAL_COL: str = Field(..., env="ADDITIONAL_COL")
     GEMINI_API_KEY: str = Field(..., env="GEMINI_API_KEY")
+    REDIS_HOST: str = Field(..., env="REDIS_HOST")
+    REDIS_PORT: int = Field(..., env="REDIS_PORT")
     
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -53,7 +53,6 @@ if selected_route == "Topic Analysis":
                     st.subheader("Sentiment Analysis")
                     st.write(f"Positive: {topic['sentiment_analysis']['positive_percentage']}")
                     st.write(f"Negative: {topic['sentiment_analysis']['negative_percentage']}")
-                    st.write(f"Neutral: {topic['sentiment_analysis']['neutral_percentage']}")
                     if topic['positive_samples']:
                         st.markdown("**Positive Samples:**")
                         for sample in topic['positive_samples']:

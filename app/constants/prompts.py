@@ -29,7 +29,7 @@ Instructions:
 5. Generate a summary based *only* on these extracted points. The summary should be in sentence form only, without any lists or bullet points.
 
 Output Format:
-- If relevant insights are found, present them in sentence form, clearly distinguishing between positive and negative aspects related to '{keyword}'. For example: "Summary: Positively, customers frequently praised the {keyword} for its [positive aspect]. On the other hand, some users expressed concern regarding [negative aspect] of the {keyword}."
+- If relevant insights are found, present them in sentence form, clearly distinguishing between positive and negative aspects related to '{keyword}'."
 - If *no* relevant insights concerning the keyword are found, output *only*:
     No specific insights related to provided keyword were found in the provided reviews.
 """

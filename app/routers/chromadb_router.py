@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.utils.chromadb_utils import get_entries_by_distance, get_entries, get_all_entries
-from app.config import settings
 import chromadb
 from app.dependencies import get_db_collection
 
