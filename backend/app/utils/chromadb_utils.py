@@ -32,7 +32,12 @@ def populate_collection_dataframe(collection, path_to_dataframe: str, id_col: st
     else:
         print(f"Collection '{settings.COLLECTION_NAME}' already contains {collection.count()} items. Skipping population.")
     
-def get_entries_by_distance(collection, keyword: str, distance_bound: float=1.1):
+    
+def get_entries_keyword(collection, keyword):
+    results = collection.query(query_texts=[keyword], where_document={"$contains": keyword})
+    return results
+
+def get_enties_similarity(collection, keyword, distance_bound):
     results = collection.query(query_texts=[keyword])
     filtered_results = {
         "ids": [],
@@ -47,8 +52,17 @@ def get_entries_by_distance(collection, keyword: str, distance_bound: float=1.1)
                 filtered_results["ids"].append(results["ids"][0][i])
                 filtered_results["documents"].append(results["documents"][0][i])
                 filtered_results["metadatas"].append(results["metadatas"][0][i])
-                filtered_results["distances"].append(distance)
+
     return filtered_results
+    
+    
+def get_entries_by_distance(collection, keyword: str, distance_bound: float=1.1):
+    similarity_dict = get_enties_similarity(collection, keyword, distance_bound)
+    keyword_dict = get_entries_keyword(collection, keyword)
+    similarity_dict["ids"].extend(keyword_dict.get("ids", []))
+    similarity_dict["documents"].extend(keyword_dict.get("documents", []))
+    similarity_dict["metadatas"].extend(keyword_dict.get("metadatas", []))
+    return similarity_dict
 
 def get_entries(collection, keyword: str, limit: int):
     return collection.query(query_texts=[keyword], n_results=limit)
