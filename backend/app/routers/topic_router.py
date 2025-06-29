@@ -17,8 +17,8 @@ router = APIRouter(
 @router.get("/analyze")
 async def analyze_reviews(collection_name: str = settings.COLLECTION_NAME, redis_client: Redis = Depends(get_cache_db), collection: chromadb.Collection = Depends(get_db_collection), model = Depends(get_topic_model), sentiment_analyzer = Depends(get_sentiment_model)):
     cache_key = f"analysis:{collection_name}"
-    # if cached_results := redis_client.get(cache_key):
-    #     return json.loads(cached_results.decode('utf-8'))
+    if cached_results := redis_client.get(cache_key):
+        return json.loads(cached_results.decode('utf-8'))
     
     if not (review_texts := get_all_entries(collection)):
         raise HTTPException(status_code=404, detail="No reviews found in ChromaDB.")
