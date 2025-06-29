@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CommentCard = ({ comment, type }) => {
     const stars = '★'.repeat(comment.rating) + '☆'.repeat(5 - comment.rating);
 

@@ -1,16 +1,15 @@
-import React from 'react';
-
 const TopicsSection = ({ topics, onTopicClick, isVisible }) => {
     return (
         <div className="topics-section">
             <h2>🎯 Popular Discussion Topics</h2>
             <div className={`topics-grid ${isVisible ? 'visible' : ''}`}>
+                {}
                 {topics.length > 0 ? (
                     topics.map((topic) => (
                         <div
-                            key={topic.id}  
+                            key={topic.id} 
                             className="topic-card"
-                            onClick={() => onTopicClick(topic.id)}  
+                            onClick={() => onTopicClick(topic.id)} 
                         >
                             {topic.name}
                         </div>

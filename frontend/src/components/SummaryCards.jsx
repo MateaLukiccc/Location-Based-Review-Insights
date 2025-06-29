@@ -1,5 +1,3 @@
-import React from 'react';
-
 const SummaryCards = ({ positiveSummary, negativeSummary, isVisible }) => {
     return (
         <div className={`summaries ${isVisible ? 'visible' : ''}`}>

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import CommentCard from './CommentCard';  
+import { useEffect } from 'react';
+import CommentCard from './CommentCard';
 
 const TopicModal = ({ topicName, sentimentData, comments, isOpen, onClose }) => {
     useEffect(() => {
@@ -9,10 +9,10 @@ const TopicModal = ({ topicName, sentimentData, comments, isOpen, onClose }) => 
             document.body.style.overflow = 'auto';
         }
         return () => {
-            document.body.style.overflow = 'auto';  
+            document.body.style.overflow = 'auto';
         };
     }, [isOpen]);
-     
+
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
@@ -26,6 +26,8 @@ const TopicModal = ({ topicName, sentimentData, comments, isOpen, onClose }) => 
     }, [onClose]);
 
     if (!isOpen) return null;
+    const positivePercent = sentimentData.positive || 0;
+    const negativePercent = sentimentData.negative || 0;
 
     return (
         <div className={`modal-overlay ${isOpen ? 'visible' : ''}`} onClick={onClose}>
@@ -46,23 +48,23 @@ const TopicModal = ({ topicName, sentimentData, comments, isOpen, onClose }) => 
                         <div className="sentiment-bar">
                             <div
                                 className="sentiment-fill positive-fill"
-                                style={{ width: `${sentimentData.positive}%` }}
+                                style={{ width: `${positivePercent}%` }}
                             >
-                                {sentimentData.positive}%
+                                {positivePercent.toFixed(0)}%
                             </div>
                         </div>
                         <div className="sentiment-bar">
                             <div
                                 className="sentiment-fill negative-fill"
-                                style={{ width: `${sentimentData.negative}%` }}
+                                style={{ width: `${negativePercent}%` }}
                             >
-                                {sentimentData.negative}%
+                                {negativePercent.toFixed(0)}%
                             </div>
                         </div>
                     </div>
                     <div className="sentiment-stats">
-                        <span style={{ color: '#059669' }}>✅ Positive: <span id="positivePercent">{sentimentData.positive}%</span></span>
-                        <span style={{ color: '#dc2626' }}>❌ Negative: <span id="negativePercent">{sentimentData.negative}%</span></span>
+                        <span style={{ color: '#059669' }}>✅ Positive: <span id="positivePercent">{positivePercent.toFixed(0)}%</span></span>
+                        <span style={{ color: '#dc2626' }}>❌ Negative: <span id="negativePercent">{negativePercent.toFixed(0)}%</span></span>
                     </div>
                 </div>
 
@@ -71,9 +73,13 @@ const TopicModal = ({ topicName, sentimentData, comments, isOpen, onClose }) => 
                         👍 Top Positive Comments
                     </h4>
                     <div id="positiveComments">
-                        {comments.positive.map((comment, index) => (
-                            <CommentCard key={index} comment={comment} type="positive" />
-                        ))}
+                        {comments.positive && comments.positive.length > 0 ? (
+                            comments.positive.map((comment, index) => (
+                                <CommentCard key={index} comment={comment} type="positive" />
+                            ))
+                        ) : (
+                            <p style={{ color: '#6b7280' }}>No positive comments available for this topic.</p>
+                        )}
                     </div>
                 </div>
 
@@ -82,9 +88,13 @@ const TopicModal = ({ topicName, sentimentData, comments, isOpen, onClose }) => 
                         👎 Top Negative Comments
                     </h4>
                     <div id="negativeComments">
-                        {comments.negative.map((comment, index) => (
-                            <CommentCard key={index} comment={comment} type="negative" />
-                        ))}
+                        {comments.negative && comments.negative.length > 0 ? (
+                            comments.negative.map((comment, index) => (
+                                <CommentCard key={index} comment={comment} type="negative" />
+                            ))
+                        ) : (
+                            <p style={{ color: '#6b7280' }}>No negative comments available for this topic.</p>
+                        )}
                     </div>
                 </div>
             </div>

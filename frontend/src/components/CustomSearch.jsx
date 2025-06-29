@@ -1,51 +1,38 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const CustomSearch = ({ onCustomSearch, customSearchResult }) => {
-    const [customTopic, setCustomTopic] = useState('');
+function CustomSearch({ onCustomSearch, customSearchResult }) {
+    const [keyword, setKeyword] = useState('');
 
-    const handleCustomSearchClick = () => {
-        if (!customTopic.trim()) {
-            alert('Please enter a custom topic');
-            return;
-        }
-        onCustomSearch(customTopic);
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleCustomSearchClick();
+    const handleSubmit = (e) => {
+        e.preventDefault(); 
+        if (keyword.trim()) {
+            onCustomSearch(keyword.trim());
         }
     };
 
-    const getResultClass = (sentiment) => {
-        if (sentiment === 'positive') return 'positive';
-        if (sentiment === 'negative') return 'negative';
-        if (sentiment === 'mixed') return 'mixed';
-        return '';
-    };
+    const isResultVisible = customSearchResult.text !== '';
 
     return (
         <div className="custom-search">
-            <h2>💭 Custom Topic Search</h2>
-            <input
-                type="text"
-                className="custom-input"
-                placeholder="Ask about specific aspects (e.g., 'food quality', 'parking', 'best time to visit')"
-                value={customTopic}
-                onChange={(e) => setCustomTopic(e.target.value)}
-                onKeyPress={handleKeyPress}
-            />
-            <button className="custom-btn" onClick={handleCustomSearchClick}>
-                Search Reviews
-            </button>
-            <div
-                className={`custom-result ${customSearchResult.text ? 'visible' : ''} ${getResultClass(customSearchResult.sentiment)}`}
-                id="custom-result"
-            >
-                {customSearchResult.text || "Enter a custom topic to get tailored insights from visitor reviews."}
+            <h2>Search by Keyword</h2>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    className="custom-input"
+                    placeholder="E.g., 'staff service', 'parking', 'food'"
+                    value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                />
+                <button type="submit" className="custom-btn">
+                    Get Details
+                </button>
+            </form>
+
+            <div className={`custom-result ${customSearchResult.sentiment} ${isResultVisible ? 'visible' : ''}`}>
+                {customSearchResult.text}
             </div>
         </div>
     );
-};
+}
 
 export default CustomSearch;
