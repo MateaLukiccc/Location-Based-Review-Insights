@@ -56,7 +56,7 @@ VisitorLens AI helps travelers and tourism professionals understand what visitor
 - Modern CSS styling
 - Fetch API for HTTP requests
 
-##Installation
+## Installation
 
 ### Backend Setup
 
