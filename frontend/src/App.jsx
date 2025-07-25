@@ -81,13 +81,11 @@ function App() {
             const formattedComments = {
                 positive: topicData.positive_samples.map(text => ({
                     text: text,
-                    rating: 5, 
-                    author: "AI Analysis" 
+                    rating: 5
                 })),
                 negative: topicData.negative_samples.map(text => ({
                     text: text,
-                    rating: 1, 
-                    author: "AI Analysis"
+                    rating: 1
                 }))
             };
 
