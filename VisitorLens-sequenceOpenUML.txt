@@ -1,0 +1,100 @@
+@startuml
+	actor "Visitor / Local authorities" as User
+	participant "UI web app" as UI
+	participant "AL controller" as AL
+	participant "SummarizationService" as Sum
+	participant "TopicService" as Topic
+	participant "SentimentService" as Sent
+	participant "DataRepository" as Repo
+
+	group Insight Processing Phase
+		activate User
+			User -> UI : getInsights(site)
+			activate UI
+			UI -> AL : getInsights(site)
+				activate AL
+				AL -> Repo : getAllReviews(site)
+					activate Repo
+					Repo --> AL : [allReviews]
+					deactivate Repo
+
+		group Parallel summaries
+  			AL -> Sum : getGoodSummary(prompt, [goodReviews])
+  				activate Sum
+  				Sum --> AL : goodSummary
+  				deactivate Sum
+
+  			AL -> Sum : getBadSummary(prompt, [badReviews])
+  				activate Sum
+  				Sum --> AL : badSummary
+  				deactivate Sum
+		end
+
+		group Topic extraction + Sentiment analysis
+  			AL -> Repo : checkCache(site)
+  				activate Repo
+  				Repo --> AL : [topics+sentiments] or null
+  				deactivate Repo
+
+  			alt If not in cache
+    				AL -> Topic : getTopics([allReviews])
+    					activate Topic
+    					Topic --> AL : [topics]
+    					deactivate Topic
+
+    				loop for each topic
+      					AL -> Sent : getSentiment(topic)
+      						activate Sent
+      						Sent --> AL : sentiment
+      						deactivate Sent
+    				end
+
+    				AL -> Repo : saveToCache([topics+sentiments])
+    					activate Repo
+    					Repo --> AL : operation status
+    					deactivate Repo
+  			end
+		end
+
+		AL --> UI : VisitorLensDTO
+		deactivate AL
+
+		UI -> User : render(VisitorLensDTO)
+		deactivate UI
+	end
+
+	group Interactive phase (opt)
+		User -> UI : click(topic)
+			activate UI
+			UI -> AL : getTopicDetails(topic)
+				activate AL
+				AL -> Repo : getTopicSentiments(topic)
+					activate Repo
+					Repo --> AL : details
+					deactivate Repo
+				AL --> UI : topicDetails
+				deactivate AL
+			UI -> User : render(topicDetails)
+			deactivate UI
+
+		User -> UI : enter user topic (userTopic)
+			activate UI
+			UI -> AL : getTopicDetails(userTopic)
+				activate AL
+				AL -> Repo : getReviewsByTopic(userTopic)
+					activate Repo
+					Repo --> AL : [reviewByTopic]
+					deactivate Repo
+
+				AL -> Sum: getSummary(prompt, userTopic, [reviewByTopic])
+					activate Sum
+					Sum--> AL : summary
+					deactivate Sum
+				AL --> UI : topicDetails
+				deactivate AL
+
+			UI -> User : render(topicDetails)
+			deactivate UI
+		deactivate User
+	end
+@enduml
